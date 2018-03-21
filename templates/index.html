@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Paprika's Blog{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+    {% if not known %}
+    <p>Pleased to meet you!</p>
+    {% else %}
+    <p>Happy to see you again!</p>
+    {% endif %}
+</div>
+
+{{ wtf.quick_form(form) }}
+
+
+
+The local date and time is {{ moment(current_time).format('LLLL') }}.
+<!--<p>That was {{ moment(current_time).fromNow(refresh=True) }}</p>-->
+<!-- <p> {{ moment(current_time).calendar() }}</p> -->
+{% endblock %}
+
