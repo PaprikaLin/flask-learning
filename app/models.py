@@ -6,6 +6,8 @@ from . import db, login_manager
 from datetime import datetime
 from flask import request
 import hashlib
+from markdown import markdown
+import bleach
 
 class Permission:
     FOLLOW = 1               # 0b00000001 关注
@@ -204,6 +206,20 @@ class Post(db.Model):
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    body_html = db.Column(db.Text)
+
+    @staticmethod
+    def on_changed_body(target, value, oldvalue, initiator):
+        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                        'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                        'h1', 'h2', 'h3', 'p', 'img']
+
+        target.body_html = bleach.linkify(bleach.clean(
+            markdown(value, output_format='html'),
+            tags=allowed_tags, strip=True))
+
+# set 事件监听
+db.event.listen(Post.body, 'set', Post.on_changed_body)
 
     # # 生成虚拟文章
     # @staticmethod
