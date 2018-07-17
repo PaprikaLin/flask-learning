@@ -4,9 +4,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = 'hard to guess!'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
+    FLASKY_MAIL_SUBJECT_PREFIX = '[Paprika]'
     FLASKY_MAIL_SENDER = '423144479@qq.com'
-    FLASKY_ADMIN = '423144479@qq.com'
+    FLASKY_ADMIN = 'Paprika'
     FLASKY_POSTS_PER_PAGE = 20
 
     @staticmethod
@@ -34,6 +34,17 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
     'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+
+    # @classmethod
+    # def init_app(cls, app):
+    #     Config.init_app(app)
+    #
+    #     import logging
+    #     from logging.handlers import SMTPHandler
+    #     credentials = None
+    #     secure = None
+    #     if getattr(cls, "MAIL_USERNAME", None) is not None:
+    #         credentials = (cls.MAIL_USERNAME, cls.)
 
 
 config = {

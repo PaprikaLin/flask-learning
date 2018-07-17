@@ -13,7 +13,7 @@ from .forms import LoginForm, RegistrationForm, ChangePasswordForm, PasswordRese
 def before_request():
     if current_user.is_authenticated:
         current_user.ping()
-        if  not current_user.confirmed \
+        if not current_user.confirmed \
                 and request.endpoint \
                 and request.blueprint != 'auth' \
                 and request.endpoint != 'static':
@@ -56,13 +56,15 @@ def register():
     if form.validate_on_submit():
         user = User(email=form.email.data,
                     username=form.username.data,
-                    password=form.password.data)
+                    password=form.password.data,
+                    confirmed=1)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
         send_email(user.email, 'Confirm Your Account',
                    'auth/email/confirm', user=user, token=token)
-        flash('A confirmation email has been sent to you by email.')
+        #flash('A confirmation email has been sent to you by email.')
+        flash('You can now log in with your account.')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
